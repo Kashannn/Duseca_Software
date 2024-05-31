@@ -71,10 +71,11 @@ class _SignInState extends State<SignIn> {
                       });
                       Navigator.pushNamed(context, RoutesName.homeScreen);
                     } catch (e) {
-                      print(e);
+                      utils.toastMessage(e.toString());
                     }
                   },
-                  color: kColorPrimary),
+                  color: kColorPrimary
+              ),
               21.verticalSpace,
               Row(
                 mainAxisAlignment: MainAxisAlignment.start,

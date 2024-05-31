@@ -14,7 +14,7 @@ class Routes {
       case RoutesName.signUpScreen:
         return MaterialPageRoute(builder: (_) => const SignUp ());
         case RoutesName.homeScreen:
-        return MaterialPageRoute(builder: (_) =>const Home());
+        return MaterialPageRoute(builder: (_) => Home());
 
       default:
         return MaterialPageRoute(builder: (_) {
