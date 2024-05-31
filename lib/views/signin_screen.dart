@@ -1,7 +1,7 @@
+import 'package:dusecasoftware/utils/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
-
 import '../AppConstant/app_constant.dart';
 import '../Resources/Components/custom_button.dart';
 import '../Resources/Components/custom_container.dart';
@@ -22,6 +22,7 @@ class _SignInState extends State<SignIn> {
   @override
   Widget build(BuildContext context) {
     final AuthViewModel authViewModel = Provider.of<AuthViewModel>(context);
+    Utils utils = Utils();
     return Scaffold(
       body: SafeArea(
           child: SingleChildScrollView(
@@ -60,14 +61,20 @@ class _SignInState extends State<SignIn> {
               ),
               24.verticalSpace,
               CustomButton(
-                  text: 'Login', onPressed: () async{
+                  text: 'Login',
+                  onPressed: () async {
                     try {
-                     await authViewModel.signIn(emailController.text, passwordController.text);
+                      await authViewModel
+                          .signIn(emailController.text, passwordController.text)
+                          .then((value) {
+                        utils.toastMessage("Login Successful");
+                      });
                       Navigator.pushNamed(context, RoutesName.homeScreen);
                     } catch (e) {
                       print(e);
                     }
-              }, color: kColorPrimary),
+                  },
+                  color: kColorPrimary),
               21.verticalSpace,
               Row(
                 mainAxisAlignment: MainAxisAlignment.start,

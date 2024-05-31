@@ -1,3 +1,5 @@
+import 'dart:ffi';
+
 import 'package:another_flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -9,7 +11,7 @@ class Utils {
     FocusScope.of(context).requestFocus(nextFocus);
   }
 
-  static void toastMessage(String message) {
+  dynamic toastMessage(String message) {
     Fluttertoast.showToast(msg: message);
   }
 
