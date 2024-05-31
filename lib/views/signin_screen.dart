@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:provider/provider.dart';
 
 import '../AppConstant/app_constant.dart';
 import '../Resources/Components/custom_button.dart';
 import '../Resources/Components/custom_container.dart';
 import '../Resources/Components/custom_labeled_textField.dart';
 import '../utils/routes/routes_name.dart';
+import '../viewmodels/auth_view_model.dart';
 
 class SignIn extends StatefulWidget {
   const SignIn({super.key});
@@ -19,8 +21,8 @@ class _SignInState extends State<SignIn> {
   TextEditingController passwordController = TextEditingController();
   @override
   Widget build(BuildContext context) {
+    final AuthViewModel authViewModel = Provider.of<AuthViewModel>(context);
     return Scaffold(
-      // resizeToAvoidBottomInset: false,
       body: SafeArea(
           child: SingleChildScrollView(
         child: Padding(
@@ -58,7 +60,14 @@ class _SignInState extends State<SignIn> {
               ),
               24.verticalSpace,
               CustomButton(
-                  text: 'Login', onPressed: () {}, color: kColorPrimary),
+                  text: 'Login', onPressed: () async{
+                    try {
+                     await authViewModel.signIn(emailController.text, passwordController.text);
+                      Navigator.pushNamed(context, RoutesName.homeScreen);
+                    } catch (e) {
+                      print(e);
+                    }
+              }, color: kColorPrimary),
               21.verticalSpace,
               Row(
                 mainAxisAlignment: MainAxisAlignment.start,

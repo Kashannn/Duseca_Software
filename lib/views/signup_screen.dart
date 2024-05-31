@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import '../AppConstant/app_constant.dart';
 import '../Resources/Components/custom_button.dart';
 import '../Resources/Components/custom_container.dart';
@@ -6,6 +7,8 @@ import '../Resources/Components/custom_labeled_textField.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../utils/routes/routes_name.dart';
+import '../utils/utils.dart';
+import '../viewmodels/auth_view_model.dart';
 
 class SignUp extends StatefulWidget {
   const SignUp({super.key});
@@ -21,6 +24,9 @@ class _SignUpState extends State<SignUp> {
   TextEditingController confirmPasswordController = TextEditingController();
   @override
   Widget build(BuildContext context) {
+    final AuthViewModel authViewModel = Provider.of<AuthViewModel>(context);
+    Utils utils = Utils();
+
     return Scaffold(
       body: SafeArea(
         child: SingleChildScrollView(
@@ -81,7 +87,19 @@ class _SignUpState extends State<SignUp> {
                 66.verticalSpace,
                 CustomButton(
                   text: 'Create Account',
-                  onPressed: () async {},
+                  onPressed: () async {
+                    try {
+                      await authViewModel
+                          .signUp(emailController.text, passwordController.text,
+                              nameController.text)
+                          .then((value) => utils.showErrorMessage(
+                              "Account created successfully", context));
+                      await Future.delayed(const Duration(seconds: 1));
+                      Navigator.pushNamed(context, RoutesName.signInScreen);
+                    } catch (e) {
+                      print(e);
+                    }
+                  },
                   color: kColorPrimary,
                 ),
                 11.verticalSpace,
@@ -96,7 +114,6 @@ class _SignUpState extends State<SignUp> {
                     GestureDetector(
                       onTap: () async {
                         Navigator.pushNamed(context, RoutesName.signInScreen);
-
                       },
                       child: Text(
                         'Sign In',
