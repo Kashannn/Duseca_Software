@@ -13,7 +13,7 @@ class CustomContainer extends StatelessWidget {
         width: 90.w,
         height: 90.h,
         decoration: BoxDecoration(
-          color: kColorWhite37,
+
           borderRadius: BorderRadius.circular(25.r),
         ),
         child: Center(
