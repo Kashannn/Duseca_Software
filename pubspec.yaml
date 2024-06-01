@@ -52,6 +52,7 @@ dependencies:
   flutter_screenutil: ^5.9.3
   google_fonts: ^6.2.1
   file_picker: ^8.0.3
+  firebase_app_check: ^0.2.2+7
 
 dev_dependencies:
   flutter_test:

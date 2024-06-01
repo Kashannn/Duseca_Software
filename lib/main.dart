@@ -34,7 +34,7 @@ class MyApp extends StatelessWidget {
               return MaterialApp(
                 debugShowCheckedModeBanner: false,
                 title: 'Bundy Track',
-                initialRoute: RoutesName.activityScreen,
+                initialRoute: RoutesName.signInScreen,
                 onGenerateRoute: Routes.generateRoute,
               );
             },
