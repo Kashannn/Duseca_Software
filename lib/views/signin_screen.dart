@@ -69,7 +69,7 @@ class _SignInState extends State<SignIn> {
                           .then((value) {
                         utils.toastMessage("Login Successful");
                       });
-                      Navigator.pushNamed(context, RoutesName.homeScreen);
+                   Navigator.pushNamed(context, RoutesName.activityScreen);
                     } catch (e) {
                       utils.toastMessage(e.toString());
                     }

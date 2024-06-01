@@ -1,5 +1,4 @@
 
-
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 
@@ -31,6 +30,10 @@ class AuthViewModel with ChangeNotifier {
     } catch (e) {
       throw e;
     }
+  }
+
+  Future<void> imageUpload(String imageUrl) async {
+
   }
 
   Future<void> signOut() async {

@@ -1,5 +1,6 @@
 import 'package:dusecasoftware/utils/routes/routes.dart';
 import 'package:dusecasoftware/utils/routes/routes_name.dart';
+import 'package:dusecasoftware/viewmodels/activity_view_model.dart';
 import 'package:dusecasoftware/viewmodels/auth_view_model.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -21,6 +22,7 @@ class MyApp extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (context) => AuthViewModel()),
+        ChangeNotifierProvider(create: (context) =>ActivityViewModel(),)
       ],
       child: Builder(
         builder: (context) {
@@ -32,7 +34,7 @@ class MyApp extends StatelessWidget {
               return MaterialApp(
                 debugShowCheckedModeBanner: false,
                 title: 'Bundy Track',
-                initialRoute: RoutesName.homeScreen,
+                initialRoute: RoutesName.activityScreen,
                 onGenerateRoute: Routes.generateRoute,
               );
             },
