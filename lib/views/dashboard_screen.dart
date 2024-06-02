@@ -8,7 +8,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../Resources/Components/custom_bottom_navigationbar.dart';
-import '../Resources/Components/file_picker.dart';
 import '../Resources/Components/text_input_dialog.dart';
 import '../viewmodels/activity_view_model.dart';
 import 'file_screen.dart';
@@ -20,13 +19,14 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
+
   int _selectedIndex = 0;
 
-  static const List<Widget> _widgetOptions = <Widget>[
+  static final List<Widget> _widgetOptions = <Widget>[
     FileScreen(),
-    ImageScreen(),
-    PdfScreen(),
-    NoteScreen(),
+    ImageScreen(key: ImageScreen.globalKey), // Use the global key here
+    PdfScreen(key: PdfScreen.globalKey), // Use the global key here
+    NoteScreen(key: NoteScreen.globalKey), // Use the global key here
   ];
 
   void _onItemTapped(int index) {
@@ -54,7 +54,7 @@ class _HomeState extends State<Home> {
           selectedIndex: _selectedIndex,
           onItemTapped: _onItemTapped,
         ),
-        floatingActionButton: _buildFloatingActionButton(context),
+        floatingActionButton: _buildFloatingActionButton(),
       ),
     );
   }
@@ -86,40 +86,33 @@ class _HomeState extends State<Home> {
               style: TextStyle(color: Colors.black87),
             ),
           ),
-          CircleAvatar(
-            backgroundImage: NetworkImage(
-                'https://via.placeholder.com/150'), // Replace with the user's image URL
-            radius: 20,
-          ),
         ],
       ),
     );
   }
 
-  Widget _buildFloatingActionButton(BuildContext context) {
+  Widget _buildFloatingActionButton() {
     return FloatingActionButton(
       elevation: 5.0,
       clipBehavior: Clip.antiAlias,
       foregroundColor: Colors.black,
-      onPressed: () {
-        _showBottomSheet(context);
-      },
+      onPressed: _showBottomSheet,
       child: Icon(Icons.add),
     );
   }
 
-  void _showBottomSheet(BuildContext context) {
+  void _showBottomSheet() {
     showModalBottomSheet(
       context: context,
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(
-          top: Radius.circular(20.0),
+        borderRadius: BorderRadius.horizontal(
+          left: Radius.circular(20.0),
+          right: Radius.circular(20.0),
         ),
       ),
       builder: (BuildContext context) {
         return Container(
-          padding: EdgeInsets.all(16.0),
-          height: 200.0, // Set a smaller height for the bottom sheet
+          height: 120.0,
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
@@ -140,12 +133,10 @@ class _HomeState extends State<Home> {
   }
 
   Widget _buildDialogOption(IconData icon, String label) {
-    ActivityViewModel activityViewModel =
-    Provider.of<ActivityViewModel>(context, listen: false);
+    ActivityViewModel activityViewModel = Provider.of<ActivityViewModel>(context, listen: false);
     FirebaseAuth auth = FirebaseAuth.instance;
     User? user = auth.currentUser;
-    String userId = user?.uid ??
-        "defaultUserId"; // Use the current user's ID or a default value
+    String userId = user?.uid ?? "defaultUserId";
 
     return GestureDetector(
       onTap: () async {
@@ -164,7 +155,10 @@ class _HomeState extends State<Home> {
                     TextButton(
                       onPressed: () {
                         Navigator.of(context).pop();
-                        activityViewModel.uploadImage(imageFile, userId);
+                        activityViewModel.uploadImage(imageFile, userId).then((_) {
+                          // Refresh image screen
+                          ImageScreen.globalKey.currentState?.refreshImages();
+                        });
                       },
                       child: Text('Upload'),
                     ),
@@ -185,14 +179,19 @@ class _HomeState extends State<Home> {
             builder: (BuildContext context) {
               return TextInputDialog(
                 onSave: (textContent) {
-                  activityViewModel.uploadText(textContent, userId);
+                  activityViewModel.uploadText(textContent, userId).then((_) {
+                    // Refresh note screen
+                    NoteScreen.globalKey.currentState?.refreshNotes();
+                  });
                 },
               );
             },
           );
         } else if (label == "PDF") {
-          FilePickerResult? result = await FilePicker.platform
-              .pickFiles(type: FileType.custom, allowedExtensions: ['pdf']);
+          FilePickerResult? result = await FilePicker.platform.pickFiles(
+            type: FileType.custom,
+            allowedExtensions: ['pdf'],
+          );
           if (result != null) {
             File pdfFile = File(result.files.single.path!);
             showDialog(
@@ -205,7 +204,10 @@ class _HomeState extends State<Home> {
                     TextButton(
                       onPressed: () {
                         Navigator.of(context).pop();
-                        activityViewModel.uploadPdf(pdfFile, userId,);
+                        activityViewModel.uploadPdf(pdfFile, userId).then((_) {
+                          // Refresh PDF screen
+                          PdfScreen.globalKey.currentState?.refreshPdfs();
+                        });
                       },
                       child: Text('Upload'),
                     ),
@@ -220,17 +222,14 @@ class _HomeState extends State<Home> {
               },
             );
           }
+        } else if (label == "File") {
+          // Implement the file upload functionality here
         }
-
       },
       child: Column(
+        mainAxisSize: MainAxisSize.min,
         children: [
-          CircleAvatar(
-            backgroundColor: Colors.blue,
-            radius: 30.0,
-            child: Icon(icon, color: Colors.white, size: 30.0),
-          ),
-          SizedBox(height: 8.0),
+          Icon(icon, size: 40.0),
           Text(label),
         ],
       ),

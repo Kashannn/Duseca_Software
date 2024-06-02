@@ -4,6 +4,9 @@ import '../services/firebase_services.dart'; // Import your FirebaseService
 class ImageScreen extends StatefulWidget {
   const ImageScreen({Key? key}) : super(key: key);
 
+
+  static final GlobalKey<_ImageScreenState> globalKey = GlobalKey<_ImageScreenState>();
+
   @override
   State<ImageScreen> createState() => _ImageScreenState();
 }
@@ -16,6 +19,12 @@ class _ImageScreenState extends State<ImageScreen> {
   void initState() {
     super.initState();
     _imagesFuture = _firebaseService.getAllImagesUrlsAndNames();
+  }
+
+  void refreshImages() {
+    setState(() {
+      _imagesFuture = _firebaseService.getAllImagesUrlsAndNames();
+    });
   }
 
   @override

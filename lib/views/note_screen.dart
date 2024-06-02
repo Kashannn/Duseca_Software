@@ -4,6 +4,9 @@ import '../services/firebase_services.dart';
 class NoteScreen extends StatefulWidget {
   const NoteScreen({super.key});
 
+  // Add a key to identify this widget
+  static final GlobalKey<_NoteScreenState> globalKey = GlobalKey<_NoteScreenState>();
+
   @override
   State<NoteScreen> createState() => _NoteScreenState();
 }
@@ -18,6 +21,12 @@ class _NoteScreenState extends State<NoteScreen> {
     textFuture = _firebaseService.getAllText();
   }
 
+  void refreshNotes() {
+    setState(() {
+      textFuture = _firebaseService.getAllText();
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -26,8 +35,6 @@ class _NoteScreenState extends State<NoteScreen> {
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(child: CircularProgressIndicator());
-          } else if (snapshot.hasError) {
-            return Center(child: Text('Error: ${snapshot.error}'));
           } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
             return const Center(child: Text('No notes found.'));
           } else {
@@ -56,7 +63,7 @@ class _NoteScreenState extends State<NoteScreen> {
                         style: const TextStyle(
                           fontSize: 18.0,
                           color: Colors.white,
-                        fontFamily:  'kStyleGrey14400',
+                          fontFamily: 'kStyleGrey14400',
                         ),
                       ),
                     ),

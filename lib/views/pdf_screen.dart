@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
-
 import '../services/firebase_services.dart';
 
 class PdfScreen extends StatefulWidget {
   const PdfScreen({super.key});
+
+  // Add a key to identify this widget
+  static final GlobalKey<_PdfScreenState> globalKey = GlobalKey<_PdfScreenState>();
 
   @override
   State<PdfScreen> createState() => _PdfScreenState();
@@ -18,6 +20,12 @@ class _PdfScreenState extends State<PdfScreen> {
   void initState() {
     super.initState();
     pdfFuture = _firebaseService.getAllPdfUrlsAndNames();
+  }
+
+  void refreshPdfs() {
+    setState(() {
+      pdfFuture = _firebaseService.getAllPdfUrlsAndNames();
+    });
   }
 
   @override
@@ -38,10 +46,10 @@ class _PdfScreenState extends State<PdfScreen> {
               padding: const EdgeInsets.all(8.0),
               child: GridView.builder(
                 gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2, // Number of columns
-                  crossAxisSpacing: 8.0, // Spacing between columns
-                  mainAxisSpacing: 8.0, // Spacing between rows
-                  childAspectRatio: 0.8, // Adjust as needed
+                  crossAxisCount: 2,
+                  crossAxisSpacing: 8.0,
+                  mainAxisSpacing: 8.0,
+                  childAspectRatio: 0.8,
                 ),
                 itemCount: pdfs.length,
                 itemBuilder: (context, index) {
@@ -50,19 +58,19 @@ class _PdfScreenState extends State<PdfScreen> {
                     children: [
                       Expanded(
                         child: Card(
-                          color: Colors.black, // Light background color
+                          color: Colors.black,
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(15),
                             side: BorderSide(
-                              color: Colors.grey.withOpacity(0.5), // Border color with some opacity
-                              width: 2, // Border width
+                              color: Colors.grey.withOpacity(0.5),
+                              width: 2,
                             ),
                           ),
                           clipBehavior: Clip.antiAlias,
                           child: InkWell(
                             onTap: () => _launchURL(pdf['url']!),
                             child: Container(
-                              color: Colors.teal.withOpacity(0.1), // Light background color
+                              color: Colors.teal.withOpacity(0.1),
                               child: Center(
                                 child: Icon(
                                   Icons.picture_as_pdf,
@@ -79,7 +87,7 @@ class _PdfScreenState extends State<PdfScreen> {
                         child: Text(
                           pdf['name']!,
                           style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.bold),
-                          textAlign: TextAlign.center, // Center-align the text
+                          textAlign: TextAlign.center,
                         ),
                       ),
                     ],
