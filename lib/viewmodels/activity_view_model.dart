@@ -10,8 +10,12 @@ class ActivityViewModel with ChangeNotifier {
   Future<void> uploadImage(File image, String userId) async {
     try {
       String imageUrl = await _uploadFile(image, 'images');
-      await _updateUserFiles(userId, imageUrl, image.path.split('/').last, 'images'); // Pass the original file name
-      notifyListeners();
+      if (imageUrl.isNotEmpty) {
+        await _updateUserFiles(userId, imageUrl, image.path.split('/').last, 'images');
+        notifyListeners();
+      } else {
+        print('Image URL is empty');
+      }
     } catch (e) {
       print('Upload image error: $e');
     }
@@ -78,7 +82,7 @@ class ActivityViewModel with ChangeNotifier {
       return await taskSnapshot.ref.getDownloadURL();
     } catch (e) {
       print('File upload error: $e');
-      throw e;
+      return ''; // Return empty string if upload fails
     }
   }
 }

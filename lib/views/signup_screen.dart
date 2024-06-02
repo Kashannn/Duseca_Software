@@ -17,11 +17,15 @@ class SignUp extends StatefulWidget {
   State<SignUp> createState() => _SignUpState();
 }
 
+
 class _SignUpState extends State<SignUp> {
   TextEditingController nameController = TextEditingController();
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
   TextEditingController confirmPasswordController = TextEditingController();
+
+  bool isLoading = false;
+
   @override
   Widget build(BuildContext context) {
     final AuthViewModel authViewModel = Provider.of<AuthViewModel>(context);
@@ -83,21 +87,29 @@ class _SignUpState extends State<SignUp> {
                   hintText: 'Re-enter your password',
                   passwordfield: true,
                 ),
-                // const Spacer(),
                 66.verticalSpace,
-                CustomButton(
+                isLoading
+                    ? CircularProgressIndicator()
+                    : CustomButton(
                   text: 'Create Account',
                   onPressed: () async {
+                    setState(() {
+                      isLoading = true;
+                    });
                     try {
-                      await authViewModel
-                          .signUp(emailController.text, passwordController.text,
-                              nameController.text)
-                          .then((value) => utils.showErrorMessage(
-                              "Account created successfully", context));
+                      await authViewModel.signUp(
+                          emailController.text,
+                          passwordController.text,
+                          nameController.text);
                       await Future.delayed(const Duration(seconds: 1));
-                      Navigator.pushNamed(context, RoutesName.signInScreen);
+                      Navigator.pushNamed(
+                          context, RoutesName.signInScreen);
                     } catch (e) {
                       print(e);
+                    } finally {
+                      setState(() {
+                        isLoading = false;
+                      });
                     }
                   },
                   color: kColorPrimary,

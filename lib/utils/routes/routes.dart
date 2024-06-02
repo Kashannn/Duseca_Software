@@ -3,6 +3,7 @@ import 'package:dusecasoftware/utils/routes/routes_name.dart';
 import 'package:flutter/material.dart';
 
 import '../../views/dashboard_screen.dart';
+import '../../views/pdf_screen.dart';
 import '../../views/signin_screen.dart';
 import '../../views/signup_screen.dart';
 
@@ -15,6 +16,8 @@ class Routes {
         return MaterialPageRoute(builder: (_) => const SignUp ());
      case RoutesName.homeScreen:
         return MaterialPageRoute(builder: (_) => Home());
+        case RoutesName.pdfscreen:
+        return MaterialPageRoute(builder: (_) => PdfScreen());
 
       default:
         return MaterialPageRoute(builder: (_) {
