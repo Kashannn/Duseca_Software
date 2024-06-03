@@ -8,9 +8,11 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../Resources/Components/custom_bottom_navigationbar.dart';
+import '../Resources/Components/floating_action_button.dart';
+import '../Resources/Components/search_bar.dart';
 import '../Resources/Components/text_input_dialog.dart';
 import '../viewmodels/activity_view_model.dart';
-import 'file_screen.dart';
+
 import 'image_screen.dart';
 
 class Home extends StatefulWidget {
@@ -19,14 +21,12 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-
   int _selectedIndex = 0;
 
   static final List<Widget> _widgetOptions = <Widget>[
-    FileScreen(),
-    ImageScreen(key: ImageScreen.globalKey), // Use the global key here
-    PdfScreen(key: PdfScreen.globalKey), // Use the global key here
-    NoteScreen(key: NoteScreen.globalKey), // Use the global key here
+    ImageScreen(key: ImageScreen.globalKey),
+    PdfScreen(key: PdfScreen.globalKey),
+    NoteScreen(key: NoteScreen.globalKey),
   ];
 
   void _onItemTapped(int index) {
@@ -41,7 +41,7 @@ class _HomeState extends State<Home> {
       child: Scaffold(
         body: Column(
           children: [
-            _buildSearchBar(),
+            customSearchBar(),
             Expanded(
               child: IndexedStack(
                 index: _selectedIndex,
@@ -54,54 +54,13 @@ class _HomeState extends State<Home> {
           selectedIndex: _selectedIndex,
           onItemTapped: _onItemTapped,
         ),
-        floatingActionButton: _buildFloatingActionButton(),
+        floatingActionButton:
+            CustomFloatingActionButton(onPressed: showBottomSheet),
       ),
     );
   }
 
-  Widget _buildSearchBar() {
-    return Container(
-      margin: EdgeInsets.all(16.0),
-      padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-      decoration: BoxDecoration(
-        color: Colors.black12,
-        borderRadius: BorderRadius.circular(30.0),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.white.withOpacity(0.5),
-            blurRadius: 10.0,
-            offset: Offset(10, 0),
-          ),
-        ],
-      ),
-      child: Row(
-        children: [
-          Expanded(
-            child: TextField(
-              decoration: InputDecoration(
-                hintText: 'Search...',
-                border: InputBorder.none,
-                hintStyle: TextStyle(color: Colors.black54),
-              ),
-              style: TextStyle(color: Colors.black87),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildFloatingActionButton() {
-    return FloatingActionButton(
-      elevation: 5.0,
-      clipBehavior: Clip.antiAlias,
-      foregroundColor: Colors.black,
-      onPressed: _showBottomSheet,
-      child: Icon(Icons.add),
-    );
-  }
-
-  void _showBottomSheet() {
+  void showBottomSheet() {
     showModalBottomSheet(
       context: context,
       shape: RoundedRectangleBorder(
@@ -133,7 +92,8 @@ class _HomeState extends State<Home> {
   }
 
   Widget _buildDialogOption(IconData icon, String label) {
-    ActivityViewModel activityViewModel = Provider.of<ActivityViewModel>(context, listen: false);
+    ActivityViewModel activityViewModel =
+        Provider.of<ActivityViewModel>(context, listen: false);
     FirebaseAuth auth = FirebaseAuth.instance;
     User? user = auth.currentUser;
     String userId = user?.uid ?? "defaultUserId";
@@ -142,7 +102,8 @@ class _HomeState extends State<Home> {
       onTap: () async {
         Navigator.of(context).pop();
         if (label == "Image") {
-          FilePickerResult? result = await FilePicker.platform.pickFiles(type: FileType.image);
+          FilePickerResult? result =
+              await FilePicker.platform.pickFiles(type: FileType.image);
           if (result != null) {
             File imageFile = File(result.files.single.path!);
             showDialog(
@@ -156,7 +117,6 @@ class _HomeState extends State<Home> {
                       onPressed: () {
                         Navigator.of(context).pop();
                         activityViewModel.uploadImage(imageFile, userId).then((_) {
-                          // Refresh image screen
                           ImageScreen.globalKey.currentState?.refreshImages();
                         });
                       },
@@ -205,7 +165,6 @@ class _HomeState extends State<Home> {
                       onPressed: () {
                         Navigator.of(context).pop();
                         activityViewModel.uploadPdf(pdfFile, userId).then((_) {
-                          // Refresh PDF screen
                           PdfScreen.globalKey.currentState?.refreshPdfs();
                         });
                       },

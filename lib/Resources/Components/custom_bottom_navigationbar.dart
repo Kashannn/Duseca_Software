@@ -16,14 +16,9 @@ class CustomBottomNavigationBar extends StatelessWidget {
         topRight: Radius.circular(20.0),
       ),
       child: BottomNavigationBar(
-        backgroundColor: kColorBlack,
         selectedItemColor: Colors.black, // Color of the selected item
         unselectedItemColor: Colors.blueGrey, // Color of unselected items
         items: const <BottomNavigationBarItem>[
-          BottomNavigationBarItem(
-            icon: Icon(Icons.file_copy),
-            label: 'File',
-          ),
           BottomNavigationBarItem(
             icon: Icon(Icons.image),
             label: 'Image',

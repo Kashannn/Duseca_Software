@@ -5,7 +5,6 @@ import '../services/firebase_services.dart';
 class PdfScreen extends StatefulWidget {
   const PdfScreen({super.key});
 
-  // Add a key to identify this widget
   static final GlobalKey<_PdfScreenState> globalKey = GlobalKey<_PdfScreenState>();
 
   @override
