@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-import '../../AppConstant/app_constant.dart';
 
 class CustomContainer extends StatelessWidget {
   final String imagePath;

@@ -80,7 +80,6 @@ class _HomeState extends State<Home> {
                 children: [
                   _buildDialogOption(Icons.image, "Image"),
                   _buildDialogOption(Icons.picture_as_pdf, "PDF"),
-                  _buildDialogOption(Icons.file_copy, "File"),
                   _buildDialogOption(Icons.text_fields, "Text"),
                 ],
               ),

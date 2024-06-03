@@ -19,22 +19,18 @@ class Activity {
   List<Map<String, dynamic>> get files {
     List<Map<String, dynamic>> filesList = [];
 
-    // Add imageUrls to filesList
     imageUrls.forEach((url) {
       filesList.add({'type': 'image', 'url': url});
     });
 
-    // Add pdfUrls to filesList
     pdfUrls.forEach((url) {
       filesList.add({'type': 'pdf', 'url': url});
     });
 
-    // Add fileUrls to filesList
     fileUrls.forEach((url) {
       filesList.add({'type': 'file', 'url': url});
     });
 
-    // Add textUrls to filesList
     textUrls.forEach((url) {
       filesList.add({'type': 'text', 'url': url});
     });
